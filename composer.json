@@ -1,0 +1,20 @@
+{
+    "name": "techart/amocrm",
+    "description": "Пакет для работы с AmoCRM",
+    "version": "0.0.1",
+    "authors": [
+        {
+            "name": "Techart",
+            "homepage": "http://web-techart.ru/"
+        }
+    ],
+	"autoload": {
+		"psr-4": {
+			"Techart\\AmoCRM\\": "src"
+		}
+	},
+    "minimum-stability": "dev",
+    "require": {
+		"dotzero/amocrm": "^0.3.28"
+    }
+}
