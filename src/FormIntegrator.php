@@ -31,13 +31,13 @@ class FormIntegrator
 	 * Метод проверяет наличие контакта с такими данными. Если его нет, то создает. Потом создает сделку с привязанным
 	 * контактом.
 	 *
-	 * @param string $leadName
-	 * @param string $email
-	 * @param string $phone
-	 * @param string $contactName
-	 * @param array $leadFields
-	 * @param array $leadCustomFields
-	 * @return int $leadId
+	 * @param string $leadName Название лида
+	 * @param string $email Email контакта
+	 * @param string $phone Телефон контакта
+	 * @param string $contactName Имя контакта
+	 * @param array $leadFields Основные поля лида со значениями
+	 * @param array $leadCustomFields Пользовательские поля лида со значениями
+	 * @return int|bool $leadId ID созданного лида
 	 */
 	public function sendLead($leadName, $email = '', $phone = '', $contactName = '', $leadFields = [], $leadCustomFields = [])
 	{
@@ -262,13 +262,13 @@ class FormIntegrator
 	protected function getEmailFieldId()
 	{
 		$fieldsIds = $this->fieldsIds();
-		return $fieldsIds['email'] ?? null;
+		return isset($fieldsIds['email']) && $fieldsIds['email'] ? $fieldsIds['email'] : null;
 	}
 
 	protected function getPhoneFieldId()
 	{
 		$fieldsIds = $this->fieldsIds();
-		return $fieldsIds['phone'] ?? null;
+		return isset($fieldsIds['phone']) && $fieldsIds['phone'] ? $fieldsIds['phone'] : null;
 	}
 
 	protected function fieldsIds()

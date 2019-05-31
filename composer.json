@@ -1,7 +1,7 @@
 {
     "name": "techart/amocrm",
     "description": "Пакет для работы с AmoCRM",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "authors": [
         {
             "name": "Techart",
@@ -15,6 +15,7 @@
 	},
     "minimum-stability": "dev",
     "require": {
+		"php": ">=5.6",
 		"dotzero/amocrm": "^0.3.28"
     }
 }
