@@ -37,11 +37,12 @@ class FormIntegrator
 	 * @param string $contactName Имя контакта
 	 * @param array $leadFields Основные поля лида со значениями
 	 * @param array $leadCustomFields Пользовательские поля лида со значениями
+	 * @param array $contactCustomFields Пользовательские поля контакта со значениями
 	 * @return int|bool $leadId ID созданного лида
 	 */
-	public function sendLead($leadName, $email = '', $phone = '', $contactName = '', $leadFields = [], $leadCustomFields = [])
+	public function sendLead($leadName, $email = '', $phone = '', $contactName = '', $leadFields = [], $leadCustomFields = [], $contactCustomFields = [])
 	{
-		$contact = $this->getOrCreateContact($email, $phone, $contactName);
+		$contact = $this->getOrCreateContact($email, $phone, $contactName, $contactCustomFields);
 		return $this->createLead($leadName, $contact['id'], $leadFields, $leadCustomFields);
 	}
 
@@ -54,14 +55,14 @@ class FormIntegrator
 	 * @param string $name
 	 * @return array
 	 */
-	public function getOrCreateContact($email, $phone, $name)
+	public function getOrCreateContact($email, $phone = '', $name = '', $contactCustomFields = [])
 	{
-		$contactData = $this->findContact([$email, $phone]);
+		$contactData = $this->findContact(array_filter([$email, $phone]));
 		if (is_null($contactData)) {
-			$contactId = $this->createContact($email, $phone, $name);
+			$contactId = $this->createContact($email, $phone, $name, $contactCustomFields);
 			$contactData = $this->findContactById($contactId);
 		} else {
-			$this->refreshContact($contactData, $email, $phone);
+			$this->refreshContact($contactData, $email, $phone, $contactCustomFields);
 		}
 		return $contactData;
 	}
@@ -151,7 +152,7 @@ class FormIntegrator
 	 * @param string $name
 	 * @return array|int
 	 */
-	public function createContact($email, $phone, $name = '')
+	public function createContact($email, $phone, $name = '', $customFields = [])
 	{
 		$contact = $this->client->contact;
 		$contact['name'] = $name;
@@ -165,6 +166,11 @@ class FormIntegrator
 				[$phone, 'WORK'],
 			]);
 		}
+		if (!empty($customFields)) {
+			foreach ($customFields as $fieldId => $fieldValue) {
+				$contact->addCustomField($fieldId, $fieldValue);
+			}
+		}
 		return $contact->apiAdd();
 	}
 
@@ -172,15 +178,22 @@ class FormIntegrator
 	 * @param array $contactData
 	 * @param string $email
 	 * @param string $phone
+	 * @param array $contactCustomFields
 	 * @return bool
 	 */
-	protected function refreshContact($contactData, $email, $phone)
+	protected function refreshContact($contactData, $email, $phone, $contactCustomFields = [])
 	{
 		$contactChanged = false;
 		$contact = $this->client->contact;
 
 		$contactChanged |= $this->addContactEmail($contactData, $contact, $email);
 		$contactChanged |= $this->addContactPhone($contactData, $contact, $phone);
+		if (!empty($contactCustomFields)) {
+			$contactChanged = true;
+			foreach ($contactCustomFields as $fieldId => $fieldValue) {
+				$contact->addCustomField($fieldId, $fieldValue);
+			}
+		}
 		if ($contactChanged) {
 			try {
 				$contact->apiUpdate($contactData['id']);
