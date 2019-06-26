@@ -7,10 +7,18 @@
 
 ```php
 // Основной метод для отправки лида и привязки его к нужному контакту
-public function sendLead($leadName, $email = '', $phone = '', $contactName = '', $leadFields = [], $leadCustomFields = []);
+public function sendLead(
+	$leadName, 
+	$email = '', 
+	$phone = '', 
+	$contactName = '', 
+	$leadFields = [], 
+	$leadCustomFields = [], 
+	$contactCustomFields = []
+);
 
 // Находит или создает контакт с переданными параметрами. Если котакт существует, то обновляет его данные при необходимости
-public function getOrCreateContact($email, $phone, $name);
+public function getOrCreateContact($email, $phone, $name, $customFields = []);
 
 // Создает лид и привязывает его к переданному контакту
 public function createLead($name, $contactId, $fields = [], $customFields = []);

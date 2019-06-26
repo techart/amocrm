@@ -53,6 +53,7 @@ class FormIntegrator
 	 * @param string $email
 	 * @param string $phone
 	 * @param string $name
+	 * @param array $contactCustomFields
 	 * @return array
 	 */
 	public function getOrCreateContact($email, $phone = '', $name = '', $contactCustomFields = [])
@@ -150,6 +151,7 @@ class FormIntegrator
 	 * @param $email
 	 * @param $phone
 	 * @param string $name
+	 * @param array $customFields
 	 * @return array|int
 	 */
 	public function createContact($email, $phone, $name = '', $customFields = [])
